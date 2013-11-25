@@ -3,73 +3,94 @@ package tabparkinggaragepos;
 import java.util.*;
 
 /**
- *You can't leave a parking garage empty. We need vehicles (Cars, trucks, bikes) to park in it. We'll make 
- * these here. 
+ * Class defines characteristics of a Vehicle object.
+ *
+ * @param make - Manufacturer vehicle make.
+ * @param model - Manufacturer vehicle model.
  * @author Tyler
  */
 public class Vehicle {
+
     private String make;
     private String model;
-    private String plateNumber;
 
-    /*
-     * Vehicle class CONSTRUCTOR
-     * Make our vehicle(s) here
-     * 
-     *@param - make
-     *@param - model
-     *@param - plateNumber
+    /**
+     * Empty convenience constructor.
      */
-    public Vehicle(String make, String model, String plateNumber) {
-        this.make = make;
-        this.model = model;
-        this.plateNumber = plateNumber;
+    public Vehicle() {
     }
-/*
- * Get and Set make of vehicle
- * @param - make
- */
+
+    /**
+     * Retrieves the make of vehicle.
+     *
+     * @param make - Manufacturer make of vehicle.
+     */
     public String getMake() {
         return make;
     }
 
-    public void setMake(String make) {
-        this.make = make;
-    }
-    
-/*
- * Get and Set model of vehicle
- * @param - model
- */
+    /**
+     * Retrieves the model of vehicle.
+     *
+     * @param model - Manufacturer model of vehicle.
+     */
     public String getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    /**
+     * Sets the value of make.
+     *
+     * @param make - manufacturer brand name.
+     * @throws IllegalArgumentException if make is null or empty.
+     */
+    public void setMake(String make) throws IllegalArgumentException {
+        try {
+            if (make == null || make.isEmpty()) {
+                System.out.println("Please enter a value for make.");
+            }
+        } catch (IllegalArgumentException iae) {
+            System.out.println("Cannot complete. Value is null or empty.");
+        }
+        this.make = make;
+    }
+
+    /**
+     * Sets the value of model.
+     *
+     * @param model - manufacturer model name.
+     * @throws IllegalArgumentException if make is null or empty.
+     */
+    public void setModel(String model) throws IllegalArgumentException {
+        try {
+            if (make == null || make.isEmpty()) {
+                System.out.println("Please enter a value for model.");
+            }
+        } catch (IllegalArgumentException iae) {
+            System.out.println("Cannot complete. Value is null or empty.");
+        }
         this.model = model;
     }
 
-    /*
-     * Get and Set plate number of vehicle
-     * @param - plateNumber
+    /**
+     * HashCode based on a combination of make and model.
+     *
+     * @return the HashCode
      */
-    public String getPlateNumber() {
-        return plateNumber;
-    }
-
-    public void setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.make);
         hash = 67 * hash + Objects.hashCode(this.model);
-        hash = 67 * hash + Objects.hashCode(this.plateNumber);
         return hash;
     }
 
+    /**
+     * Equality is based on a combination of make and model.
+     *
+     * @param obj - Target to test.
+     * @return Result of equality test.
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -85,17 +106,16 @@ public class Vehicle {
         if (!Objects.equals(this.model, other.model)) {
             return false;
         }
-        if (!Objects.equals(this.plateNumber, other.plateNumber)) {
-            return false;
-        }
         return true;
     }
 
+    /**
+     * Uses all properties of class.
+     *
+     * @return combination of all property values.
+     */
     @Override
     public String toString() {
-        return "Vehicle{" + "make=" + make + ", model=" + model + ", plateNumber=" + plateNumber + '}';
+        return "Vehicle{" + "make=" + make + ", model=" + model + '}';
     }
-    
-    
-    
 }

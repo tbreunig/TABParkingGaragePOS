@@ -1,100 +1,182 @@
 package tabparkinggaragepos;
+
 /**
- *This class will declare the variables that determine the parameter for Best Value Garages
- * parking fees.
+ * Class declares all fields and methods for Thrifty Garages parking fee
+ * calculations.
+ *
  * @param minimumFee - $1.50 minimum to park UP TO TWO HOURS
- * @param additionalHourlyFee - $0.75 per hour charge for each hour OR part of the hour parked after the
- *                                                  minimum has been met
- * @param maxParkTime - No user can park longer than 24 hours at a time.
+ * @param additionalHourlyFee - $0.75 per hour charge for each hour OR part of
+ * the hour parked after the minimum has been met
  * @param timeParked - total time user has been parked.
- * @param totalFee - This variable will hold the total parking charge for the user.
+ * @param totalFee - This variable will hold the total parking charge for the
+ * user.
+ *
  * @author Tyler
+ *
+ *
+ * SHOULD PROBABLY CHANGE THE THROW NEW EXCEPTIONS TO TRY-CATCH BLOCKS
+ *
+ *
  */
 public class ThriftyGarageFeeCalculator implements FeeCalculatorStrategy {
-    
+
     private double timeParked;
     private double minimumFee = 1.50;
-    private double additionalHourlyFee = 0.50;
-    private double maxParkTime = 24.00;
+    private double additionalHourlyFee = 0.75;
     private double totalFee;
-
-    /*
-     * @param timeParked - Total time the user has been parked
+    /**
+     * Parking Garage and Receipt components.
+     *
+     * @param garage
      */
-    public ThriftyGarageFeeCalculator(double timeParked) {
-          this.timeParked = timeParked; 
+    ParkingGarage garage;
+    /**
+     * Receipt component.
+     *
+     * @param receipt
+     */
+    Receipt receipt;
+
+    /**
+     * Empty convenience constructor.
+     */
+    public ThriftyGarageFeeCalculator() {
     }
 
-    /*
-     * Methods from the feeCalculatorStrategy interface that will be overridden
+    /**
+     * Method retrieves the total time a vehicle is parked in the garage.
+     *
+     * @param timeIn - Time stamp for when a vehicle is checked in.
+     * @param timeOut - Time stamp for when a vehicle is checked out.
+     * @return - The difference from the timeIn and timeOut, giving you a total
+     * time parked.
      */
     @Override
-    public void getTimeStamp(String timeIn, String timeOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getTimeStamp(double timeIn, double timeOut) {
+        return timeOut - timeIn;
     }
 
-    @Override
-    public void calculateParkingCharge(double hoursParked, double minimumFee, double hourlyRate, double maxCharge) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /*
-     * Get and Set timeParked
+    /**
+     * Method calculates the total charge for a vehicle that has used a garage.
+     *
+     * @param hoursParked - Total time a vehicle has been parked.
+     * @return - The total charge for a vehicle that has been checked out of the
+     * garage.
      */
-    public double getTimeParked() {
-        return timeParked;
+    @Override
+    public double calculateParkingCharge(double hoursParked) {
+        if (hoursParked <= 2.00) {
+            totalFee += minimumFee;
+        } else if (hoursParked > 2.00) {
+            totalFee += (minimumFee + ((hoursParked - 2.00) * additionalHourlyFee));
+//        } else {
+//            hoursParked = 24.00;
+//            totalFee += (minimumFee + ((hoursParked - 2.00) * additionalHourlyFee));
+        }
+        return totalFee;
     }
 
-    public void setTimeParked(double timeParked) {
-        this.timeParked = timeParked;
-    }
-
-    /*
-     * Get and Set minimumFee
+    /**
+     * Retrieves the minimum parking fee.
+     *
+     * @return - Of type Double. Should be $1.50. Applied to any charged
+     * incurred from time equal to or less than 2.0 hours parked.
      */
     public double getMinimumFee() {
         return minimumFee;
     }
 
-    public void setMinimumFee(double minimumFee) {
-        this.minimumFee = minimumFee;
-    }
-
-    /*
-     * Get and Set additionalHourlyFee
+    /**
+     * Retrieves the additional hourly parking fee.
+     *
+     * @return - Of type Double. Should be $0.75 for full & partial time above
+     * 2.01 hours parked.
      */
     public double getAdditionalHourlyFee() {
         return additionalHourlyFee;
     }
 
-    public void setAdditionalHourlyFee(double additionalHourlyFee) {
-        this.additionalHourlyFee = additionalHourlyFee;
-    }
-
-    /*
-     * Get and Set maxParkTime
-     */
-    public double getMaxParkTime() {
-        return maxParkTime;
-    }
-
-    public void setMaxParkTime(double maxParkTime) {
-        this.maxParkTime = maxParkTime;
-    }
-    
-    /*
-     * Get and Set totalFee
+    /**
+     * Retrieves the total fee for parking the a vehicle has incurred.
+     *
+     * @return - Of type double. Total fee combines a calculation of minimum
+     * fee, additional hourly fee, and hours parked.
      */
     public double getTotalFee() {
         return totalFee;
     }
 
+    /**
+     * Retrieves the total time a vehicle has been parked.
+     *
+     * @return - Of type Double.
+     */
+    public double getTimeParked() {
+        return timeParked;
+    }
+
+    /**
+     * Sets the value of the total fee(s) incurred
+     *
+     * @param minimumFee - Should be 1.50. Applied to any charged incurred
+     * within 2.0 hours parked.
+     * @throws IllegalArgumentException if total fee and time parked is less
+     * than zero.
+     */
+    public void setMinimumFee(double minimumFee) {
+        if (minimumFee < 1.50 || minimumFee > 1.50) {
+            throw new IllegalArgumentException("Minimum fee cannot be greater than or less than 1.50");
+        }
+        this.minimumFee = minimumFee;
+    }
+
+    /**
+     * @param additionalHourlyFee - Should be 0.50 for time above 2.01 hours
+     * parked, up to the max fee. chosen.
+     * @throws IllegalArgumentException if total fee and time parked is less
+     * than zero.
+     */
+    public void setAdditionalHourlyFee(double additionalHourlyFee) {
+        if (additionalHourlyFee < 0.75 || additionalHourlyFee > 0.75) {
+            throw new IllegalArgumentException("Additional hourly fee cannot be greater than or "
+                    + "less than 0.75.");
+        }
+
+        this.additionalHourlyFee = additionalHourlyFee;
+    }
+
+    /**
+     * @param totalFee - Any value between the zero and 10.00(maximum fee).
+     * @throws IllegalArgumentException if total fee and time parked is less
+     * than zero.
+     * @throws IllegalArgumentException if total fee and time parked is less
+     * than zero.
+     */
     public void setTotalFee(double totalFee) {
+        if (totalFee < 0) {
+            throw new IllegalArgumentException("Fee cannot be a negative value.");
+        }
         this.totalFee = totalFee;
     }
 
-    /*
-     * Required HashCode method
+    /**
+     * @param timeParked - Any value between the value of zero and 24.00(maximum
+     * time allowed).
+     * @throws IllegalArgumentException if total fee and time parked is less
+     * than zero.
+     */
+    public void setTimeParked(double timeParked) {
+        if (timeParked < 0) {
+            throw new IllegalArgumentException("Time parked cannot be a negative value. Make sure to use"
+                    + "a decimal value (0.00) to denote the time.");
+        }
+        this.timeParked = timeParked;
+    }
+
+    /**
+     * HashCode based on a combination of make and model
+     *
+     * @return the HashCode
      */
     @Override
     public int hashCode() {
@@ -102,13 +184,16 @@ public class ThriftyGarageFeeCalculator implements FeeCalculatorStrategy {
         hash = 59 * hash + (int) (Double.doubleToLongBits(this.timeParked) ^ (Double.doubleToLongBits(this.timeParked) >>> 32));
         hash = 59 * hash + (int) (Double.doubleToLongBits(this.minimumFee) ^ (Double.doubleToLongBits(this.minimumFee) >>> 32));
         hash = 59 * hash + (int) (Double.doubleToLongBits(this.additionalHourlyFee) ^ (Double.doubleToLongBits(this.additionalHourlyFee) >>> 32));
-        hash = 59 * hash + (int) (Double.doubleToLongBits(this.maxParkTime) ^ (Double.doubleToLongBits(this.maxParkTime) >>> 32));
         hash = 59 * hash + (int) (Double.doubleToLongBits(this.totalFee) ^ (Double.doubleToLongBits(this.totalFee) >>> 32));
         return hash;
     }
 
-    /*
-     * Required equals method
+    /**
+     * Equality is based on a combination of time parked, min & max fees,
+     * additional hourly fee, and total fee.
+     *
+     * @param obj - Target to test.
+     * @returnr Result of equality test.
      */
     @Override
     public boolean equals(Object obj) {
@@ -128,21 +213,21 @@ public class ThriftyGarageFeeCalculator implements FeeCalculatorStrategy {
         if (Double.doubleToLongBits(this.additionalHourlyFee) != Double.doubleToLongBits(other.additionalHourlyFee)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.maxParkTime) != Double.doubleToLongBits(other.maxParkTime)) {
-            return false;
-        }
         if (Double.doubleToLongBits(this.totalFee) != Double.doubleToLongBits(other.totalFee)) {
             return false;
         }
         return true;
     }
 
-    /*
-     * Required toString method
+    /**
+     * Uses all properties of class
+     *
+     * @return combination of all property values
      */
     @Override
     public String toString() {
-        return "ThriftyGarageFeeCalculator{" + "timeParked=" + timeParked + ", minimumFee=" + minimumFee + ", additionalHourlyFee=" + additionalHourlyFee + ", maxParkTime=" + maxParkTime + ", totalFee=" + totalFee + '}';
+        return "ThriftyGarageFeeCalculator{" + "timeParked=" + timeParked + ", minimumFee="
+                + minimumFee + ", additionalHourlyFee=" + additionalHourlyFee
+                + ", totalFee=" + totalFee + '}';
     }
-    
 }

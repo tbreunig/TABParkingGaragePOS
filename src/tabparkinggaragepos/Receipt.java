@@ -4,78 +4,57 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *This class will set the guidelines for the information of our receipt of transaction. An output 
- * strategy will be implemented as well. Methods from that interface are declared here and overridden.
+ * This class contains all fields and methods pertaining to the output of a
+ * receipt for a vehicle that has used a garage; All field information will be
+ * listed on the outputted receipt.
+ *
+ * @param customerNumber - Of type int. Holds the value for a customer ID
+ * number.
+ * @param dateAndTime - Of type String. Holds the format criteria for the date
+ * and time.
+ * @param currentDate - Of type Date. Holds the value for the current date and
+ * time.
+ * @param timeIn - Of type double. Hold timeStamp for a vehicle's check-in.
+ * @param timeOut - Of type double. Hold timeStamp for a vehicle's check-out.
+ * @param timeParked - Of type Double. Holds the value for the total time a
+ * vehicle has been parked.
+ * @param feeSummary - Of type double. Holds the value for total fee parking fee
+ * calculation.
+ *
  * @author Tyler
  */
-public class Receipt {
+public class Receipt implements ReceiptOutputStrategy {
 
-    //My attempt at being DIP compliant and flexible.
-    private ReceiptOutputStrategy printOut;
-    //Receipt number variable that prints for every customer who passes through.
-    private static int customerNumber = 0;
-    //Varialble used to store the output format of the date and time on the 
-    //receipt.
+    private int customerNumber;
     private String dateAndTime = "MM/dd/yy hh:mm a z";
-    //Variable on the receipt to hold the value of the current date.
     private Date currentDate;
-    //Variable used for gathering "Time Stamp" used in fee calculation.
-    private String timeIn;
-    private String timeOut;
-    //Result of fee calculation.
+    private double timeIn;
+    private double timeOut;
+    private double timeParked;
     private double feeSummary;
 
     /**
-     * Receipt constructor builds a customer printout with: 
-     * Receipt Number 
-     * Date and Time
-     * The Garage Business Name
-     * The time parked: To AND From
-     * (TimeStamp) Total fee charged for time parked
-     *
-     * @param recceiptNumber
-     * @param dateAndTime - Date and Time printed on the receipt.
-     * @param timeIn - Time Stamp.
-     * @param timeOut - Time Stamp.
-     * @param feeSummary - Final calculation of parking charges.
+     * Empty convenience constructor.
      */
-    public Receipt(String timeIn, String timeOut, ReceiptOutputStrategy printOut) {
-        //receiptNumber
-        customerNumber++;
-        //Creating a date object to display on the receipt
-        currentDate = new Date();
-        //Time Stamp
-        this.timeIn = timeIn;
-        this.timeOut = timeOut;
-        //Output
-        this.printOut = printOut;
-        
+    public Receipt() {
     }
-    
+
     /**
-    * Began work on the output receipt output method. Needs a lot of work.
-    */
-    public final void printOutReceipt(){
-        System.out.println("Thank you for using: ");
-    }
-    
-   /**
-     * Makes sure the date and time on receipt are formatted correctly.
-     * @param dateAndTime
-     * @return formatted receipt date
+     * Retrieves the current date and time in proper format.
+     *
+     * @return - The current, formatted, date & time.
      */
     public String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(dateAndTime);
         return sdf.format(currentDate);
     }
-    
+
     /**
-     * Method for setting the date and time on the receipt.
+     * Sets the date and time on the receipt.
+     *
      * @param dateAndTime
      */
     public void setCurrentDate(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
 }
-
-

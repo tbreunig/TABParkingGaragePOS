@@ -1,10 +1,30 @@
-
 package tabparkinggaragepos;
+
 /**
- * This classis all about the flexible implementation of a fee calculator for multiple garages.
+ * Class contains unimplemented abstract methods the will be inherited from
+ * other garage calculators
+ *
  * @author Tyler
  */
 public interface FeeCalculatorStrategy {
-public abstract void getTimeStamp(String timeIn, String timeOut);
-public abstract void calculateParkingCharge(double hoursParked, double minimumFee, double hourlyRate, double maxCharge);
+
+    /**
+     * Abstract method to be given unique implementation from other garage
+     * calculators that use this interface.
+     *
+     * @param timeIn
+     * @param timeOut
+     * @return - A calculation that determines the total amount of time parked.
+     */
+    public abstract double getTimeStamp(double timeIn, double timeOut);
+
+    /**
+     * Abstract method to be given unique implementation from other garage
+     * calculators that use this interface.
+     *
+     * @param hoursParked
+     * @return - Uniquely calculated parking charge(s) based on a garages fee
+     * criteria.
+     */
+    public abstract double calculateParkingCharge(double hoursParked);
 }

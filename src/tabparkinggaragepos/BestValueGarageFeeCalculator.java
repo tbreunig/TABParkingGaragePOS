@@ -1,100 +1,187 @@
 package tabparkinggaragepos;
+
 /**
- *This class will declare the variables that determine the parameter for Best Value Garages
- * parking fees.
+ * Class declares all fields and methods for Best Value Garages parking fee
+ * calculations.
+ *
  * @param timeParked - total time user has been parked
  * @param minimumFee - $2.00 minimum to park UP TO THREE HOURS
- * @param additionalHourlyFee - $0.50 per hour charge for each hour OR part of the hour parked after the
- *                                                  minimum has been met
+ * @param additionalHourlyFee - $0.50 per hour charge for each hour OR part of
+ * the hour parked after the minimum has been met
  * @param maxParkTime - No user can park longer than 24 hours at a time
  * @param maxFee - Maximum fee a user can be charged is $10.00
+ * @param totalFee - Stores the value for a vehicle's total parking fee.
+ *
+ * @param timeIn - parameter passed into timeStamp method
+ * @param timeOut - parameter passed into timeStamp method
+ *
  * @author Tyler
+ *
+ * GET TIME STAMP & CALCULATE PARKING CHARGE...STILL NEED TO BE OVERRIDDEN.
+ *
  */
 public class BestValueGarageFeeCalculator implements FeeCalculatorStrategy {
-    
+
     private double timeParked;
     private double minimumFee = 2.00;
     private double additionalHourlyFee = 0.50;
     private double maxParkTime = 24.00;
     private double maxFee = 10.00;
-    private double totalFee;
+    private double totalFee = 0;
+    private double timeIn;
+    private double timeOut;
+    private double timeStamp;
+    /**
+     * Parking Garage.
+     *
+     * @param garage
+     */
+    ParkingGarage garage;
+    /**
+     * Receipt component.
+     *
+     * @param receipt
+     */
+    Receipt receipt;
 
     /**
+     * Empty convenience Constructor.
+     *
      * @param timeParked - total time user has been parked
      */
-    public BestValueGarageFeeCalculator(double timeParked) {
-        this.timeParked = timeParked;
-    }
-    
-    /*
-     * Methods from the FeeCalculatorStrategy interface to be overridden
-     */
-    @Override
-    public void getTimeStamp(String timeIn, String timeOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public void calculateParkingCharge(double hoursParked, double minimumFee, double hourlyRate, double maxCharge) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BestValueGarageFeeCalculator() {
     }
 
-    /*
-     *  Get and Set timeParked
+    /**
+     * Method calculates the total time parked.
+     *
+     * @param timeIn
+     * @param timeOut
+     * @returns - The total time a vehicle has been parked.
+     */
+    @Override
+    public double getTimeStamp(double timeIn, double timeOut) {
+        this.timeIn = timeIn;
+        this.timeOut = timeOut;
+        timeParked += timeOut - timeIn;
+        return timeParked;
+    }
+
+    /**
+     * Method calculates the total charge incurred for a vehicle that has been
+     * parked.
+     *
+     * @param hoursParked
+     * @returns - The total charge incurred for parking.
+     */
+    @Override
+    public double calculateParkingCharge(double hoursParked) {
+        if (hoursParked <= 3.00) {
+            totalFee += minimumFee;
+        } else if (hoursParked > 3.00 && hoursParked <= 19.00) {
+            totalFee += (minimumFee + ((hoursParked - 3.00) * additionalHourlyFee));
+        } else {
+            hoursParked += 24.00;
+            totalFee += maxFee;
+        }
+        return totalFee;
+    }
+
+    /**
+     * Retrieve value for total time parked.
+     *
+     * @return - The total time parked.
      */
     public double getTimeParked() {
         return timeParked;
     }
 
-    public void setTimeParked(double timeParked) {
-        this.timeParked = timeParked;
-    }
-
-    /*
-     * Get and Set mimimumFee
+    /**
+     * Retrieve value for minimum fee.
+     *
+     * @return - The minimum parking fee.
      */
     public double getMinimumFee() {
         return minimumFee;
     }
 
-    public void setMinimumFee(double minimumFee) {
-        this.minimumFee = minimumFee;
-    }
-
-    /*
-     * Get and Set additionaHourlyFee
+    /**
+     * Retrieve value for additional hourly fee.
+     *
+     * @return - The additional hourly fee.
      */
     public double getAdditionalHourlyFee() {
         return additionalHourlyFee;
     }
 
-    public void setAdditionalHourlyFee(double additionalHourlyFee) {
-        this.additionalHourlyFee = additionalHourlyFee;
-    }
-
-    /*
-     * Get and Set maxParkTime
+    /**
+     * Retrieve value for maximum time parked.
+     *
+     * @return - maximum time parked.
      */
     public double getMaxParkTime() {
         return maxParkTime;
     }
 
-    public void setMaxParkTime(double maxParkTime) {
-        this.maxParkTime = maxParkTime;
-    }
-
-     /*
-      * Get and Set maxFee
-      */
+    /**
+     * Retrieve the maximum for parking.
+     *
+     * @return - the maximum parking fee.
+     */
     public double getMaxFee() {
         return maxFee;
     }
 
+    /**
+     * Sets the value for the total time a vehicle has been parked.
+     *
+     * @param timeParked - Of type Double. Total time a vehicle has been parked.
+     */
+    public void setTimeParked(double timeParked) {
+        this.timeParked = timeParked;
+    }
+
+    /**
+     * Sets the value for the minimum parking fee.
+     *
+     * @param minimumFee - Of type Double. The minimum fee for parking.
+     */
+    public void setMinimumFee(double minimumFee) {
+        this.minimumFee = minimumFee;
+    }
+
+    /**
+     * Sets the value for the additional hourly fee.
+     *
+     * @param additionalHourlyFee - Of type Double. The additional hourly fee.
+     */
+    public void setAdditionalHourlyFee(double additionalHourlyFee) {
+        this.additionalHourlyFee = additionalHourlyFee;
+    }
+
+    /**
+     * sets the value of the maximum time parked.
+     *
+     * @param maxParkTime - Of type Double. The maximum time parked.
+     */
+    public void setMaxParkTime(double maxParkTime) {
+        this.maxParkTime = maxParkTime;
+    }
+
+    /**
+     * Sets the value of the maximum fee incurred.
+     *
+     * @param maxFee - Of type Double. The maximum fee incurred.
+     */
     public void setMaxFee(double maxFee) {
         this.maxFee = maxFee;
     }
 
-    /*
-     * Required HashCode method
+    /**
+     * HashCode based on a combination of total time parked, minimum fee,
+     * additional hourly fee, maximum time parked, and maximum fee.
+     *
+     * @return the HashCode
      */
     @Override
     public int hashCode() {
@@ -107,8 +194,12 @@ public class BestValueGarageFeeCalculator implements FeeCalculatorStrategy {
         return hash;
     }
 
-    /*
-     * Required equals method
+    /**
+     * Equality is based on a combination of total time parked, minimum fee,
+     * additional hourly fee, maximum time parked, and maximum fee.
+     *
+     * @param obj - Target to test.
+     * @return Result of equality test.
      */
     @Override
     public boolean equals(Object obj) {
@@ -136,13 +227,14 @@ public class BestValueGarageFeeCalculator implements FeeCalculatorStrategy {
         }
         return true;
     }
-    
-    /*
-     *Required toString method 
+
+    /**
+     * Uses all properties of class.
+     *
+     * @return combination of all property values.
      */
-   @Override
+    @Override
     public String toString() {
         return "BestValueGarageFeeCalculator{" + "timeParked=" + timeParked + ", minimumFee=" + minimumFee + ", additionalHourlyFee=" + additionalHourlyFee + ", maxParkTime=" + maxParkTime + ", maxFee=" + maxFee + '}';
     }
-
 }
